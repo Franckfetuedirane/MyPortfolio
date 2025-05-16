@@ -815,59 +815,11 @@
         </div>
     </div>
 
-    <!-- Ajoutez ce style dans votre section CSS -->
-    <style>
-        .alert {
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            animation: fadeIn 0.5s ease-in-out;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
 
-        .alert.success {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
-        }
-
-        .alert.error {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert.fade-out {
-            animation: fadeOut 0.5s ease-in-out forwards;
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            to {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-        }
-    </style>
 
     <!-- Ajoutez ce script JavaScript avant la fermeture de la balise body -->
+     <!-- Bootstrap Bundle JS (inclut Popper) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         function showAlert(message, type) {
             const alertContainer = document.getElementById('alert-container');
@@ -931,3 +883,5 @@
         <p>&copy; 2025 Mon Portfolio. Tous droits réservés.</p>
         <p>Développé avec ..... et du code propre. | <a href="#">Retour en haut</a></p>
     </footer>
+</body>
+</html>
