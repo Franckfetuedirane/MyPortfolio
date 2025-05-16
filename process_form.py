@@ -77,7 +77,7 @@ Message:
         logger.info("Tentative d'envoi de l'email...")
         
         try:
-            mail.send(msg)
+            mail.send(msg)  
             logger.info("Email envoyé avec succès!")
             return jsonify({
                 'status': 'success',
