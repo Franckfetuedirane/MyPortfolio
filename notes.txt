@@ -1,0 +1,80 @@
+python process_form.py : lancer le serveur
+http://127.0.0.1:5000/test_email
+
+
+
+import os
+from flask import Flask, request, jsonify
+from flask.cli import load_dotenv
+from flask_mail import Mail, Message
+
+app = Flask(__name__)
+load_dotenv()
+
+# Configuration de Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+# Correction : assignation directe au lieu de os.environ.get()
+app.config['MAIL_USERNAME'] = 'franckfetuef@gmail.com'
+app.config['MAIL_PASSWORD'] = 'tobb hpjk uyyf tish'  # Mot de passe d'application
+app.config['MAIL_DEFAULT_SENDER'] = 'franckfetuef@gmail.com'
+
+mail = Mail(app)
+
+@app.route('/process_form', methods=['POST'])
+def process_form():
+    try:
+        name = request.form.get('floatingName', '')
+        email = request.form.get('floatingEmail', '')
+        subject = request.form.get('floatingSubject', '')
+        message = request.form.get('floatingMessage', '')
+
+        print(f"Nom: {name}, Email: {email}, Sujet: {subject}, Message: {message}")
+
+        # Envoi de l'e-mail
+        msg = Message(
+            subject=subject,
+            sender=app.config['MAIL_DEFAULT_SENDER'],
+            recipients=['franckfetuef@gmail.com']
+        )
+        msg.body = f"Nom: {name}\nEmail: {email}\n\nMessage:\n{message}"
+        mail.send(msg)
+
+        return jsonify({"success": True, "message": "Message envoyé avec succès !"}), 200
+    except Exception as e:
+        print(f"Erreur : {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+# Ajoutez ce code au début de votre route de test pour vérifier les identifiants
+@app.route('/check_credentials', methods=['GET'])
+def check_credentials():
+    username = app.config['MAIL_USERNAME']
+    password = app.config['MAIL_PASSWORD']
+    sender = app.config['MAIL_DEFAULT_SENDER']
+    
+    return jsonify({
+        'username': username,
+        'password_length': len(password) if password else 0,
+        'sender': sender,
+        'password_masked': '•' * len(password) if password else 'Non défini'
+    })
+
+@app.route('/test_email', methods=['GET'])
+def test_email():
+    try:
+        # Correction : utilisation de l'expéditeur configuré
+        msg = Message(
+            subject="Test Email",
+            sender=app.config['MAIL_DEFAULT_SENDER'],
+            recipients=['franckfetuef@gmail.com']  # Remplacez par le destinataire souhaité
+        )
+        msg.body = "Ceci est un email de test."
+        mail.send(msg)
+        return "Email envoyé avec succès !", 200
+    except Exception as e:
+        return f"Erreur : {e}", 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
