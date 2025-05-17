@@ -392,3 +392,15 @@ text-decoration: underline;
             transform: translateY(-20px);
         }
     }
+
+
+    @media (max-width: 768px) {
+  .profile-img {
+    width: 150px;
+    height: 150px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  /* Ajoute d'autres adaptations ici */
+}
