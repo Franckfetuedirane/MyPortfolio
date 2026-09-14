@@ -35,6 +35,7 @@ yarn-error.log*
 
 # Django local data
 django_backend/db.sqlite3
+django_backend/staticfiles/
 
 # vercel
 .vercel

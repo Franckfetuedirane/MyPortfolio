@@ -102,7 +102,7 @@ export default function Home() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/portfolio-items/")
+    fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_URL ?? "http://localhost:8000"}/api/portfolio-items/`)
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then((remoteItems) => {
         if (Array.isArray(remoteItems) && remoteItems.length > 0) {

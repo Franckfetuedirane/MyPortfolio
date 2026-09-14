@@ -15,7 +15,7 @@ class CorsMiddleware:
         origin = request.headers.get("Origin")
         if origin in settings.CORS_ALLOWED_ORIGINS:
             response["Access-Control-Allow-Origin"] = origin
-            response["Access-Control-Allow-Headers"] = "Content-Type"
-            response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+            response["Access-Control-Allow-Headers"] = "Content-Type, X-CSRFToken"
+            response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             response["Vary"] = "Origin"
         return response

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, CheckCircle2, Clock3, Mail, MapPin, Phone, Send, Sparkles } from "lucide-react";
 import { useState } from "react";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL ?? "http://localhost:8000";
+
 export default function ContactSection() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
@@ -16,7 +18,7 @@ export default function ContactSection() {
     setError("");
 
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_DJANGO_CONTACT_URL ?? "http://localhost:8000/api/contact/", {
+      const response = await fetch(process.env.NEXT_PUBLIC_DJANGO_CONTACT_URL ?? `${API_BASE_URL}/api/contact/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

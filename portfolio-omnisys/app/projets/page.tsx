@@ -76,7 +76,7 @@ export default function Projets() {
   const [projects, setProjects] = useState(fallbackProjects);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/projects/")
+    fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_URL ?? "http://localhost:8000"}/api/projects/`)
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then((remoteProjects) => {
         if (Array.isArray(remoteProjects) && remoteProjects.length > 0) {

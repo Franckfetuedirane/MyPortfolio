@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## API Django du formulaire de contact
 
-Le formulaire utilise le backend Django situé dans `django_backend/`. Les messages sont enregistrés dans SQLite et envoyés à `franckfetuef@gmail.com` lorsque SMTP Gmail est configuré.
+Le formulaire utilise le backend Django situé dans `django_backend/`. En production, les messages et les données du portfolio sont enregistrés dans PostgreSQL et envoyés à `franckfetue@gmail.com` lorsque SMTP Gmail est configuré.
 
 ### Lancer l'API en local
 
@@ -29,6 +29,16 @@ Copy-Item .env.example .env
 python manage.py migrate
 python manage.py runserver 127.0.0.1:8000
 ```
+
+## Déployer le backend sur Render
+
+Le fichier `render.yaml` crée le service web Django et sa base PostgreSQL. Dans Render, utilisez **New > Blueprint**, sélectionnez le dépôt, puis vérifiez les variables marquées `sync: false` :
+
+- `DJANGO_ALLOWED_HOSTS` : le domaine Render de l'API, par exemple `portfolio-django-api.onrender.com`
+- `CORS_ALLOWED_ORIGINS` : l'origine exacte du frontend AWS, sans slash final, par exemple `https://www.monsite.com`
+- `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` et `CONTACT_RECIPIENT`
+
+Après le déploiement, vérifiez `https://VOTRE-API.onrender.com/health/`. Dans l'environnement de build du frontend AWS, définissez `NEXT_PUBLIC_DJANGO_API_URL` sur `https://VOTRE-API.onrender.com`, puis relancez le build Next.js. Le formulaire accepte aussi l'override optionnel `NEXT_PUBLIC_DJANGO_CONTACT_URL` sur `https://VOTRE-API.onrender.com/api/contact/`. Les routes publiques disponibles sont `/api/contact/`, `/api/projects/` et `/api/portfolio-items/`.
 
 Le backend est configuré pour envoyer par SMTP Gmail. Activez la validation en deux étapes, créez un mot de passe d'application, puis renseignez `EMAIL_HOST_PASSWORD` dans `django_backend/.env`. N'utilisez jamais le mot de passe normal du compte Gmail.
 
