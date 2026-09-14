@@ -1,1 +1,23 @@
-.venv
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Django local data and secrets
+portfolio-omnisys/django_backend/.env
+portfolio-omnisys/django_backend/db.sqlite3
+
+# Node and Next.js
+portfolio-omnisys/node_modules/
+portfolio-omnisys/.next/
+portfolio-omnisys/out/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs and local tooling
+*.log
+.vscode/
