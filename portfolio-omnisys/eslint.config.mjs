@@ -11,6 +11,7 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    "django_backend/staticfiles/**",
     "next-env.d.ts",
   ]),
 ]);

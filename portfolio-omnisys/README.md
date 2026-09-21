@@ -32,13 +32,27 @@ python manage.py runserver 127.0.0.1:8000
 
 ## Déployer le backend sur Render
 
-Le fichier `render.yaml` crée le service web Django et sa base PostgreSQL. Dans Render, utilisez **New > Blueprint**, sélectionnez le dépôt, puis vérifiez les variables marquées `sync: false` :
+Le fichier `render.yaml` décrit le service web Django et sa base PostgreSQL. Dans Render, utilisez **New > Blueprint** si vous souhaitez créer automatiquement les deux services, ou créez-les manuellement avec les mêmes commandes. Vérifiez ensuite les variables marquées `sync: false` :
 
 - `DJANGO_ALLOWED_HOSTS` : le domaine Render de l'API, par exemple `portfolio-django-api.onrender.com`
 - `CORS_ALLOWED_ORIGINS` : l'origine exacte du frontend AWS, sans slash final, par exemple `https://www.monsite.com`
+- `CSRF_TRUSTED_ORIGINS` : la même origine HTTPS que `CORS_ALLOWED_ORIGINS`
 - `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` et `CONTACT_RECIPIENT`
 
-Après le déploiement, vérifiez `https://VOTRE-API.onrender.com/health/`. Dans l'environnement de build du frontend AWS, définissez `NEXT_PUBLIC_DJANGO_API_URL` sur `https://VOTRE-API.onrender.com`, puis relancez le build Next.js. Le formulaire accepte aussi l'override optionnel `NEXT_PUBLIC_DJANGO_CONTACT_URL` sur `https://VOTRE-API.onrender.com/api/contact/`. Les routes publiques disponibles sont `/api/contact/`, `/api/projects/` et `/api/portfolio-items/`.
+Après le déploiement, vérifiez `https://VOTRE-API.onrender.com/health/`. Dans les variables d'environnement de l'application Amazon Amplify, définissez `NEXT_PUBLIC_DJANGO_API_URL` sur `https://VOTRE-API.onrender.com`, puis relancez le build Next.js. Le formulaire accepte aussi l'override optionnel `NEXT_PUBLIC_DJANGO_CONTACT_URL` sur `https://VOTRE-API.onrender.com/api/contact/`. Les routes publiques disponibles sont `/health/`, `/api/contact/`, `/api/projects/` et `/api/portfolio-items/`.
+
+### Configuration Render recommandée
+
+Pour une création manuelle du service web Django :
+
+```text
+Root Directory: django_backend
+Build Command: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+Start Command: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+Health Check Path: /health/
+```
+
+Render fournit `DATABASE_URL` à partir de la base PostgreSQL. Django utilise PostgreSQL automatiquement lorsque cette variable existe et conserve SQLite uniquement pour le développement local. Les médias et documents déjà présents dans `public/` appartiennent au frontend Amplify ; les chemins enregistrés dans les projets doivent donc commencer par `/projet/` ou `/...` et exister dans le build frontend.
 
 Le backend est configuré pour envoyer par SMTP Gmail. Activez la validation en deux étapes, créez un mot de passe d'application, puis renseignez `EMAIL_HOST_PASSWORD` dans `django_backend/.env`. N'utilisez jamais le mot de passe normal du compte Gmail.
 

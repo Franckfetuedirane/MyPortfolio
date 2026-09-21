@@ -2,6 +2,7 @@ services:
   - type: web
     name: portfolio-django-api
     runtime: python
+    plan: free
     rootDir: django_backend
     buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
     startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
@@ -15,14 +16,12 @@ services:
         sync: false
       - key: CORS_ALLOWED_ORIGINS
         sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
       - key: DJANGO_SECURE_SSL_REDIRECT
         value: "1"
       - key: DJANGO_SECURE_HSTS_SECONDS
         value: "31536000"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: portfolio-postgres
-          property: connectionString
       - key: EMAIL_BACKEND
         value: django.core.mail.backends.smtp.EmailBackend
       - key: EMAIL_HOST
@@ -42,6 +41,3 @@ services:
       - key: CONTACT_RECIPIENT
         sync: false
 
-databases:
-  - name: portfolio-postgres
-    plan: free

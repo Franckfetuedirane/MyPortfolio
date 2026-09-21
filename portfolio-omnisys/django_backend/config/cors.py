@@ -12,7 +12,7 @@ class CorsMiddleware:
         else:
             response = self.get_response(request)
 
-        origin = request.headers.get("Origin")
+        origin = request.headers.get("Origin", "").rstrip("/")
         if origin in settings.CORS_ALLOWED_ORIGINS:
             response["Access-Control-Allow-Origin"] = origin
             response["Access-Control-Allow-Headers"] = "Content-Type, X-CSRFToken"
