@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Download, Menu, X } from "lucide-react";
+import { Download, Languages, Menu, Moon, Sun, X } from "lucide-react";
+import { useSitePreferences } from "./SitePreferences";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { language, theme, toggleLanguage, toggleTheme } = useSitePreferences();
+  const isEnglish = language === "en";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,8 +22,8 @@ export default function Header() {
 
   const navLinks = [
     { href: "/#expertise", label: "Expertise" },
-    { href: "/projets", label: "Projets" },
-    { href: "/#parcours", label: "Parcours" },
+    { href: "/#projets", label: language === "fr" ? "Projets" : "Projects" },
+    { href: "/#parcours", label: language === "fr" ? "Parcours" : "Journey" },
     { href: "/#contact", label: "Contact" },
   ];
 
@@ -30,7 +33,7 @@ export default function Header() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`site-header fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? "bg-[#050816]/80 backdrop-blur-md border-b border-white/10 py-4 shadow-2xl"
             : "bg-transparent py-6"
@@ -68,25 +71,32 @@ export default function Header() {
 
           {/* Contact Button Desktop */}
           <div className="hidden items-center gap-3 md:flex">
+          <button onClick={toggleLanguage} aria-label="Change language" title="Change language" className="control-button">
+            <Languages className="h-4 w-4" /> {language.toUpperCase()}
+          </button>
+          <button onClick={toggleTheme} aria-label="Change theme" title="Change theme" className="control-button">
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
           <a
             href="/CV_2026-08-14_Franck%20Dirane_TCHUMAMO%20FETUE.pdf"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-orange-100 transition-all hover:border-orange-300/60 hover:bg-orange-500/20"
           >
-            <Download className="h-4 w-4" /> CV
+            <Download className="h-4 w-4" /> {isEnglish ? "Resume" : "CV"}
           </a>
           <a
             href="mailto:franckfetuef@gmail.com"
             className="hidden md:block rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200 transition-all duration-300 hover:border-blue-400/60 hover:bg-blue-500/10 hover:text-white"
           >
-            Me contacter
+            {isEnglish ? "Contact me" : "Me contacter"}
           </a>
           </div>
 
           {/* Menu Mobile Toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
             className="md:hidden text-slate-300 hover:text-white transition-colors"
           >
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -104,6 +114,10 @@ export default function Header() {
               className="md:hidden border-t border-white/10 bg-[#050816]/95 backdrop-blur-md"
             >
               <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6">
+                <div className="flex items-center gap-2 border-b border-white/10 pb-4">
+                  <button onClick={toggleLanguage} className="control-button flex-1"><Languages className="h-4 w-4" /> {language.toUpperCase()}</button>
+                  <button onClick={toggleTheme} aria-label="Change theme" className="control-button"><Sun className="h-4 w-4" /></button>
+                </div>
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -120,13 +134,13 @@ export default function Header() {
                   rel="noreferrer"
                   className="flex items-center justify-center gap-2 rounded-full border border-orange-400/30 bg-orange-500/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-orange-100 transition-all hover:border-orange-300/60 hover:bg-orange-500/20"
                 >
-                  <Download className="h-4 w-4" /> Télécharger le CV
+                  <Download className="h-4 w-4" /> {isEnglish ? "Download resume" : "Télécharger le CV"}
                 </a>
                 <a
                   href="mailto:franckfetuef@gmail.com"
                   className="mt-2 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200 transition-all duration-300 hover:border-blue-400/60 hover:bg-blue-500/10 hover:text-white text-center"
                 >
-                  Me contacter
+                  {isEnglish ? "Contact me" : "Me contacter"}
                 </a>
               </div>
             </motion.div>

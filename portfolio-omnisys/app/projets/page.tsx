@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, GitBranch, Code2, Cloud, Zap, CircleDot, CheckCircle2 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useSitePreferences } from "../components/SitePreferences";
 
 type ProjectStatus = "En cours" | "Terminé";
 type ProjectCategory = "Tous" | "Logiciel" | "Cloud" | "Électrotechnique";
@@ -72,6 +73,8 @@ const categories: ProjectCategory[] = ["Tous", "Logiciel", "Cloud", "Électrotec
 const statuses: ProjectStatus[] = ["En cours", "Terminé"];
 
 export default function Projets() {
+  const { language } = useSitePreferences();
+  const isEnglish = language === "en";
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>("Tous");
   const [projects, setProjects] = useState(fallbackProjects);
 
@@ -102,7 +105,7 @@ export default function Projets() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#050816] text-white overflow-hidden relative pt-20">
+      <main className="projects-page min-h-screen bg-[#050816] text-white overflow-x-clip relative pt-20">
         {/* Background interactif */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050816] to-[#050816] -z-10" />
               <motion.div
@@ -120,10 +123,10 @@ export default function Projets() {
           className="mb-16"
         >
           <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white mb-6">
-            Projets <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-300 to-slate-600">& Réalisations</span>
+            {isEnglish ? "Projects" : "Projets"} <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-300 to-slate-600">{isEnglish ? "& Work" : "& Réalisations"}</span>
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl font-light leading-relaxed">
-            Une sélection de systèmes intégrés, de la conception logicielle au déploiement d&apos;infrastructures Cloud, en passant par l&apos;ingénierie matérielle.
+            {isEnglish ? "A selection of integrated systems, from software design to Cloud infrastructure deployment and hardware engineering." : "Une sélection de systèmes intégrés, de la conception logicielle au déploiement d'infrastructures Cloud, en passant par l'ingénierie matérielle."}
           </p>
         </motion.div>
 
@@ -137,8 +140,8 @@ export default function Projets() {
               <section key={status} aria-labelledby={`status-${status}`}>
                 <div className="mb-5 flex items-center gap-3 border-b border-white/10 pb-3">
                   <StatusIcon className={isCompleted ? "h-5 w-5 text-emerald-400" : "h-5 w-5 text-amber-400"} />
-                  <h2 id={`status-${status}`} className="text-xl font-bold text-white">{status}</h2>
-                  <span className="text-sm text-slate-500">{statusProjects.length} projet{statusProjects.length > 1 ? "s" : ""}</span>
+                  <h2 id={`status-${status}`} className="text-xl font-bold text-white">{isEnglish ? (isCompleted ? "Completed" : "In progress") : status}</h2>
+                  <span className="text-sm text-slate-500">{statusProjects.length} {isEnglish ? `project${statusProjects.length > 1 ? "s" : ""}` : `projet${statusProjects.length > 1 ? "s" : ""}`}</span>
                 </div>
                 <div className="space-y-3">
                   {statusProjects.map((project) => (
@@ -147,7 +150,7 @@ export default function Projets() {
                       <span className="text-xs uppercase tracking-wider text-slate-500">{project.category}</span>
                     </div>
                   ))}
-                  {statusProjects.length === 0 && <p className="text-sm text-slate-500">Aucun projet dans cette catégorie.</p>}
+                  {statusProjects.length === 0 && <p className="text-sm text-slate-500">{isEnglish ? "No projects in this category." : "Aucun projet dans cette catégorie."}</p>}
                 </div>
               </section>
             );
@@ -171,7 +174,7 @@ export default function Projets() {
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              <span className="relative z-10">{category}</span>
+              <span className="relative z-10">{isEnglish ? ({ "Tous": "All", "Logiciel": "Software", "Cloud": "Cloud", "Électrotechnique": "Electrical engineering" }[category] ?? category) : category}</span>
             </button>
           ))}
         </div>
@@ -213,7 +216,7 @@ export default function Projets() {
                       </div>
                       <div className="flex flex-wrap items-center justify-end gap-3">
                         <span className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] ${project.status === "Terminé" ? "border-emerald-400/30 bg-emerald-500/15 text-emerald-200" : "border-amber-400/30 bg-amber-500/15 text-amber-200"}`}>
-                          {project.status}
+                          {isEnglish ? (project.status === "Terminé" ? "Completed" : "In progress") : project.status}
                         </span>
                         <div className="flex gap-2">
 <button className="p-2 rounded-full bg-white/5 hover:bg-white/20 text-slate-300 hover:text-white transition-colors">
@@ -227,7 +230,7 @@ export default function Projets() {
                     </div>
 
                     <div className="mb-4 inline-flex px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full border border-white/10 bg-white/5 text-slate-300 w-max">
-                      {project.category}
+                      {isEnglish ? ({ "Logiciel": "Software", "Cloud": "Cloud", "Électrotechnique": "Electrical engineering" }[project.category] ?? project.category) : project.category}
                     </div>
 
                     <h3 className="text-3xl font-black text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-400 transition-all">

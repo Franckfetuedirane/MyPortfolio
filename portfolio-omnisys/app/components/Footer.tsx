@@ -2,35 +2,37 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { BriefcaseBusiness, Globe2, Mail, MapPin, Music2, Phone, ArrowRight, Share2, Video } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { useSitePreferences } from "./SitePreferences";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { language } = useSitePreferences();
+  const isEnglish = language === "en";
 
   const contactInfo = [
     { icon: Mail, label: "Email", value: "franckfetuef@gmail.com", href: "mailto:franckfetuef@gmail.com" },
-    { icon: Phone, label: "Téléphone", value: "+237 675 336 314", href: "tel:+237675336314" },
-    { icon: MapPin, label: "Localisation", value: "Bafoussam & Douala, Cameroun", href: "#" },
+    { icon: Phone, label: isEnglish ? "Phone" : "Téléphone", value: "+237 675 336 314", href: "tel:+237675336314" },
+    { icon: MapPin, label: isEnglish ? "Location" : "Localisation", value: isEnglish ? "Bafoussam & Douala, Cameroon" : "Bafoussam & Douala, Cameroun", href: "#" },
   ];
 
   const quickLinks = [
-    { label: "Accueil", href: "/" },
-    { label: "Projets", href: "/projets" },
-    { label: "Expertise", href: "#expertise" },
-    { label: "Contact", href: "#contact" },
+    { label: isEnglish ? "Home" : "Accueil", href: "/" },
+    { label: isEnglish ? "Projects" : "Projets", href: "/projets" },
+    { label: "Expertise", href: "/#expertise" },
+    { label: "Contact", href: "/#contact" },
   ];
 
   const socialLinks = [
-    { icon: Share2, href: "https://github.com/Franckfetuedirane", label: "GitHub" },
-    { icon: Globe2, href: "https://www.facebook.com/FranckFetue", label: "Facebook" },
-    { icon: BriefcaseBusiness, href: "https://www.linkedin.com/in/franck-fetue-670626372/", label: "LinkedIn" },
-    { icon: Video, href: "https://www.youtube.com/", label: "YouTube" },
-    { icon: Music2, href: "https://www.tiktok.com/", label: "TikTok" },
-    { icon: Mail, href: "mailto:franckfetuef@gmail.com", label: "Email" },
+    { mark: "GH", icon: null, href: "https://github.com/Franckfetuedirane", label: "GitHub" },
+    { mark: "f", icon: null, href: "https://www.facebook.com/FranckFetue", label: "Facebook" },
+    { mark: "in", icon: null, href: "https://www.linkedin.com/in/franck-fetue-670626372/", label: "LinkedIn" },
+    { mark: "YT", icon: null, href: "https://www.youtube.com/@FranckFetue", label: "YouTube" },
+    { mark: "", icon: Mail, href: "mailto:franckfetue@gmail.com", label: "Email" },
   ];
 
   return (
-    <footer className="relative bg-[#050816] border-t border-white/10 text-white overflow-hidden">
+    <footer className="site-footer relative bg-[#050816] border-t border-white/10 text-white overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(249,115,22,0.1),transparent_50%)]" />
 
@@ -46,16 +48,16 @@ export default function Footer() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.15),transparent_40%)]" />
           <div className="relative z-10">
             <h2 className="text-3xl md:text-5xl font-black leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">
-              Prêt à transformer votre vision en réalité ?
+              {isEnglish ? "Ready to turn your vision into reality?" : "Prêt à transformer votre vision en réalité ?"}
             </h2>
             <p className="text-lg text-slate-300 mb-8 max-w-2xl">
-              Contactez-moi pour discuter de vos projets et de comment je peux vous aider à atteindre vos objectifs
+              {isEnglish ? "Contact me to discuss your projects and how I can help you reach your goals." : "Contactez-moi pour discuter de vos projets et de comment je peux vous aider à atteindre vos objectifs"}
             </p>
             <a
               href="mailto:franckfetuef@gmail.com"
               className="inline-flex items-center gap-3 rounded-full bg-white text-slate-950 px-8 py-4 font-bold uppercase tracking-[0.15em] hover:scale-[1.05] transition-transform duration-300 group"
             >
-              Commencer maintenant
+              {isEnglish ? "Start now" : "Commencer maintenant"}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
@@ -82,9 +84,9 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed mb-6">
-              Architecte de solutions digitales innovantes. Expertise en logiciel, cloud et électrotechnique.
+              {isEnglish ? "Architect of innovative digital solutions. Expertise in software, cloud and electrical engineering." : "Architecte de solutions digitales innovantes. Expertise en logiciel, cloud et électrotechnique."}
             </p>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
@@ -98,7 +100,7 @@ export default function Footer() {
                     title={social.label}
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 hover:border-blue-400/50 hover:bg-blue-500/10 hover:text-blue-400 transition-all duration-300"
                   >
-                    <Icon className="w-5 h-5" />
+                    {Icon ? <Icon className="w-5 h-5" /> : <span className="text-xs font-black tracking-tight">{social.mark}</span>}
                   </motion.a>
                 );
               })}
@@ -141,7 +143,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-white mb-6">Navigation</h3>
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-white mb-6">{isEnglish ? "Navigation" : "Navigation"}</h3>
             <div className="space-y-3">
               {quickLinks.map((link) => (
                 <Link
@@ -163,7 +165,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-white mb-6">Compétences</h3>
+            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-white mb-6">{isEnglish ? "Skills" : "Compétences"}</h3>
             <div className="flex flex-wrap gap-2">
               {["Next.js", "AWS", "Docker", "TypeScript", "Python", "DevOps"].map((skill) => (
                 <span
@@ -189,14 +191,14 @@ export default function Footer() {
           className="flex flex-col items-center justify-between gap-6 md:flex-row"
         >
           <p className="text-xs text-slate-500 tracking-wider">
-            © {currentYear} OmniSys FETUE. Tous droits réservés.
+            © {currentYear} OmniSys FETUE. {isEnglish ? "All rights reserved." : "Tous droits réservés."}
           </p>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-center text-xs text-slate-500">
             <Link href="/" className="hover:text-white transition-colors">
-              Politique de confidentialité
+              {isEnglish ? "Privacy policy" : "Politique de confidentialité"}
             </Link>
             <Link href="/" className="hover:text-white transition-colors">
-              Conditions d&apos;utilisation
+              {isEnglish ? "Terms of use" : "Conditions d&apos;utilisation"}
             </Link>
           </div>
         </motion.div>
