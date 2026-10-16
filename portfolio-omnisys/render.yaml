@@ -22,6 +22,12 @@ services:
         value: "1"
       - key: DJANGO_SECURE_HSTS_SECONDS
         value: "31536000"
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        sync: false
+      - key: BREVO_SENDER_NAME
+        value: "Portfolio"
       - key: EMAIL_BACKEND
         value: django.core.mail.backends.smtp.EmailBackend
       - key: EMAIL_HOST

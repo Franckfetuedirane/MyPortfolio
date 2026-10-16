@@ -54,7 +54,7 @@ Health Check Path: /health/
 
 Render fournit `DATABASE_URL` à partir de la base PostgreSQL. Django utilise PostgreSQL automatiquement lorsque cette variable existe et conserve SQLite uniquement pour le développement local. Les médias et documents déjà présents dans `public/` appartiennent au frontend Amplify ; les chemins enregistrés dans les projets doivent donc commencer par `/projet/` ou `/...` et exister dans le build frontend.
 
-Le backend est configuré pour envoyer par SMTP Gmail. Activez la validation en deux étapes, créez un mot de passe d'application, puis renseignez `EMAIL_HOST_PASSWORD` dans `django_backend/.env`. N'utilisez jamais le mot de passe normal du compte Gmail.
+Pour l'envoi des messages sur Render Free, configurez Brevo (API HTTPS, car le SMTP sortant est bloqué sur les ports usuels) : ajoutez `BREVO_API_KEY` et `BREVO_SENDER_EMAIL` dans l'environnement Render. L'adresse expéditeur doit être vérifiée dans Brevo. Les variables SMTP Gmail restent utilisées en local si `BREVO_API_KEY` est absente. Ne placez jamais une clé API dans Git.
 
 L'administration des messages est disponible sur `http://127.0.0.1:8000/admin/`. Créez un administrateur avec `python manage.py createsuperuser`.
 

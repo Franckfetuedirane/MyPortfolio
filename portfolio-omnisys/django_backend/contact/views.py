@@ -1,6 +1,8 @@
 import json
 import logging
 import smtplib
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -10,6 +12,40 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import ContactMessage, PortfolioItem, Project
 
 logger = logging.getLogger(__name__)
+
+
+def send_contact_email(subject, body, reply_to):
+    if not settings.BREVO_API_KEY:
+        return EmailMessage(
+            subject=subject,
+            body=body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[settings.CONTACT_RECIPIENT],
+            reply_to=[reply_to],
+        ).send(fail_silently=False)
+
+    payload = {
+        "sender": {
+            "name": settings.BREVO_SENDER_NAME,
+            "email": settings.BREVO_SENDER_EMAIL,
+        },
+        "to": [{"email": settings.CONTACT_RECIPIENT}],
+        "replyTo": {"email": reply_to},
+        "subject": subject,
+        "textContent": body,
+    }
+    request = Request(
+        "https://api.brevo.com/v3/smtp/email",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "api-key": settings.BREVO_API_KEY,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        method="POST",
+    )
+    with urlopen(request, timeout=settings.EMAIL_TIMEOUT) as response:
+        return response.status in (200, 201, 202)
 
 
 def projects(request):
@@ -54,17 +90,17 @@ def contact_message(request):
     body = f"Nom : {name}\nEmail : {email}\n\nMessage :\n{message}"
 
     try:
-        EmailMessage(
-            subject=subject,
-            body=body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[settings.CONTACT_RECIPIENT],
-            reply_to=[email],
-        ).send(fail_silently=False)
-    except (TimeoutError, smtplib.SMTPServerDisconnected):
-        logger.exception("Le serveur SMTP Gmail ne répond pas")
+        send_contact_email(subject, body, email)
+    except HTTPError:
+        logger.exception("Le service email a refusé le message de contact")
         return JsonResponse(
-            {"detail": "Le message a été enregistré, mais Gmail ne répond pas depuis cette connexion réseau. Réessayez ou utilisez un autre réseau."},
+            {"detail": "Le message a été enregistré, mais le service email a refusé l'envoi. Vérifiez la clé API Brevo et l'adresse expéditeur validée."},
+            status=502,
+        )
+    except (TimeoutError, URLError, smtplib.SMTPServerDisconnected):
+        logger.exception("Le service email ne répond pas")
+        return JsonResponse(
+            {"detail": "Le message a été enregistré, mais le service email ne répond pas. Vérifiez la configuration Brevo."},
             status=503,
         )
     except smtplib.SMTPAuthenticationError:
@@ -74,9 +110,9 @@ def contact_message(request):
             status=502,
         )
     except Exception:
-        logger.exception("Impossible d'envoyer le message de contact par email")
+        logger.exception("Impossible d'envoyer le message de contact")
         return JsonResponse(
-            {"detail": "Le message a été enregistré, mais l'envoi email a échoué. Vérifiez la configuration Gmail."},
+            {"detail": "Le message a été enregistré, mais l'envoi email a échoué. Vérifiez la clé API Brevo et l'adresse expéditeur validée."},
             status=502,
         )
 
