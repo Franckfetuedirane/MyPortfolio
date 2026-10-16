@@ -78,7 +78,7 @@ export default function Header() {
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           <a
-            href="/CV_2026-08-14_Franck%20Dirane_TCHUMAMO%20FETUE.pdf"
+            href="/CV_2026-10-16_Franck%20Dirane_TCHUMAMO%20FETUE.pdf"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-500/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-orange-100 transition-all hover:border-orange-300/60 hover:bg-orange-500/20"
@@ -129,7 +129,7 @@ export default function Header() {
                   </Link>
                 ))}
                 <a
-                  href="/CV_2026-08-14_Franck%20Dirane_TCHUMAMO%20FETUE.pdf"
+                  href="/CV_2026-10-16_Franck%20Dirane_TCHUMAMO%20FETUE.pdf"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center justify-center gap-2 rounded-full border border-orange-400/30 bg-orange-500/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-orange-100 transition-all hover:border-orange-300/60 hover:bg-orange-500/20"

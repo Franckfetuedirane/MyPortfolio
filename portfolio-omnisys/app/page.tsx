@@ -98,7 +98,7 @@ export default function Home() {
     { title: "Attestation de Bachelor", description: "Une étape de spécialisation qui relie génie logiciel, architecture des systèmes et innovation numérique.", category: "Parcours académique", type: "PDF", year: "2024", src: "/attestation_bachelor.pdf", accent: "emerald" },
     { title: "Relevé de notes B3", description: "Le détail de mon parcours de troisième année et des compétences consolidées durant cette période.", category: "Parcours académique", type: "PDF", year: "2024", src: "/relevé de notes B3.pdf", accent: "violet" },
     { title: "Relevé du baccalauréat", description: "Le relevé officiel qui complète la première étape de mon parcours académique.", category: "Parcours académique", type: "PDF", year: "2018", src: "/relevé_bacc.pdf", accent: "blue" },
-    { title: "Curriculum vitae", description: "Mon parcours complet, mes expériences et les technologies que je mobilise pour construire des solutions fiables.", category: "Parcours professionnel", type: "PDF", year: "2026", src: "/CV_2026-08-14_Franck Dirane_TCHUMAMO FETUE.pdf", accent: "cyan" },
+    { title: "Curriculum vitae", description: "Mon parcours complet, mes expériences et les technologies que je mobilise pour construire des solutions fiables.", category: "Parcours professionnel", type: "PDF", year: "2026", src: "/CV_2026-10-16_Franck Dirane_TCHUMAMO FETUE.pdf", accent: "cyan" },
     ...Array.from({ length: 11 }, (_, index) => ({
       title: `Trace de terrain ${String(index + 1).padStart(2, "0")}`,
       description: "Une immersion dans mon environnement de travail : installation, observation, maintenance et mise en œuvre de solutions concrètes.",
